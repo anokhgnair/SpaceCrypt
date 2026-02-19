@@ -110,9 +110,26 @@ class SpaceCryptApp:
         shadow.place(relx=0.5, rely=0.5, anchor="center", relwidth=0.94, relheight=0.84)
         card.lift()
 
-        # Center all text in the card
-        title = tk.Label(card, text="SpaceCrypt", font=self.heading_font, bg="#fff", fg="#222", anchor="center", justify="center")
-        title.grid(row=0, column=0, columnspan=2, pady=(48, 10), padx=15, sticky="nsew")
+
+        # Title row: SpaceCrypt + by Anokh
+        title_row = tk.Frame(card, bg="#fff")
+        title_row.grid(row=0, column=0, columnspan=2, pady=(48, 10), padx=15, sticky="nsew")
+        title_row.grid_columnconfigure(0, weight=1)
+        title_row.grid_columnconfigure(1, weight=0)
+        title_row.grid_columnconfigure(2, weight=1)
+
+        # Center the title and by_label horizontally
+        spacer_left = tk.Frame(title_row, bg="#fff")
+        spacer_left.grid(row=0, column=0, sticky="ew")
+
+        title = tk.Label(title_row, text="SpaceCrypt", font=self.heading_font, bg="#fff", fg="#222", anchor="center", justify="center")
+        title.grid(row=0, column=1, sticky="e")
+
+        by_label = tk.Label(title_row, text="by Anokh", font=("Helvetica Neue", 10), bg="#fff", fg="#B0B0B0", anchor="w", justify="left")
+        by_label.grid(row=0, column=2, sticky="w", padx=(8, 0))
+
+        spacer_right = tk.Frame(title_row, bg="#fff")
+        spacer_right.grid(row=0, column=3, sticky="ew")
 
         subtitle = tk.Label(card, text="Choose an action to begin", font=self.text_font, bg="#fff", fg="#666", anchor="center", justify="center")
         subtitle.grid(row=1, column=0, columnspan=2, pady=(0, 36), padx=15, sticky="nsew")
