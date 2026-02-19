@@ -4,8 +4,8 @@ import os
 
 def encode_message(secret_file, output_file):
     try:
-        with open(secret_file, 'r', encoding='utf-8') as f:
-            secret_message = f.read()
+        # secret_file is now the secret message directly
+        secret_message = secret_file
         binary_message = ' '.join(format(x, '08b') for x in bytearray(secret_message, 'utf-8'))
 
         encoded_message = ""
@@ -17,16 +17,13 @@ def encode_message(secret_file, output_file):
             elif c == " ":
                 encoded_message += "\n"
 
-        with open(output_file, 'w', encoding='utf-8') as f:
-            f.write(encoded_message)
-        return True, "Encoding successful!"
+        return True, encoded_message
     except Exception as e:
         return False, str(e)
 
 def decode_message(encoded_file, output_file):
     try:
-        with open(encoded_file, 'r', encoding='utf-8') as f:
-            encoded_message = f.read()
+        encoded_message = encoded_file  # now direct text
         decoded_binary = ""
         for c in encoded_message:
             if c == " ":
@@ -42,8 +39,6 @@ def decode_message(encoded_file, output_file):
             if len(bin_word) == 8:
                 decoded_message += chr(int(bin_word, 2))
 
-        with open(output_file, 'w', encoding='utf-8') as f:
-            f.write(decoded_message)
         return True, decoded_message
     except Exception as e:
         return False, str(e)
@@ -58,87 +53,65 @@ class SpaceCryptApp:
         encode_frame = tk.LabelFrame(root, text="Encode Message", padx=10, pady=10)
         encode_frame.pack(pady=10, fill="x")
 
-        tk.Label(encode_frame, text="Secret Message File:").grid(row=0, column=0, sticky="w")
-        self.secret_entry = tk.Entry(encode_frame, width=50)
-        self.secret_entry.grid(row=0, column=1)
-        tk.Button(encode_frame, text="Browse", command=self.select_secret).grid(row=0, column=2)
 
-        tk.Label(encode_frame, text="Output Encoded File:").grid(row=1, column=0, sticky="w")
-        self.encode_output_entry = tk.Entry(encode_frame, width=50)
-        self.encode_output_entry.grid(row=1, column=1)
-        tk.Button(encode_frame, text="Browse", command=self.select_encode_output).grid(row=1, column=2)
+        tk.Label(encode_frame, text="Secret Message:").grid(row=0, column=0, sticky="nw")
+        self.secret_text = scrolledtext.ScrolledText(encode_frame, width=38, height=4, wrap=tk.WORD)
+        self.secret_text.grid(row=0, column=1, padx=2, pady=2, sticky="w")
 
-        tk.Button(encode_frame, text="Encode", command=self.encode).grid(row=2, column=1, pady=10)
+        tk.Button(encode_frame, text="Encode", command=self.encode).grid(row=1, column=1, pady=10)
+
+        tk.Label(encode_frame, text="Encoded Text:").grid(row=2, column=0, sticky="nw")
+        self.encoded_output_text = scrolledtext.ScrolledText(encode_frame, width=38, height=4, wrap=tk.WORD)
+        self.encoded_output_text.grid(row=2, column=1, padx=2, pady=2, sticky="w")
 
         # Decode Section
         decode_frame = tk.LabelFrame(root, text="Decode Message", padx=10, pady=10)
         decode_frame.pack(pady=10, fill="x")
 
-        tk.Label(decode_frame, text="Encoded File:").grid(row=0, column=0, sticky="w")
-        self.encoded_entry = tk.Entry(decode_frame, width=50)
-        self.encoded_entry.grid(row=0, column=1)
-        tk.Button(decode_frame, text="Browse", command=self.select_encoded).grid(row=0, column=2)
+        tk.Label(decode_frame, text="Encoded Input:").grid(row=0, column=0, sticky="nw")
+        self.encoded_input_text = scrolledtext.ScrolledText(decode_frame, width=38, height=4, wrap=tk.WORD)
+        self.encoded_input_text.grid(row=0, column=1, padx=2, pady=2, sticky="w")
 
-        tk.Label(decode_frame, text="Output Decoded File:").grid(row=1, column=0, sticky="w")
-        self.decode_output_entry = tk.Entry(decode_frame, width=50)
-        self.decode_output_entry.grid(row=1, column=1)
-        tk.Button(decode_frame, text="Browse", command=self.select_decode_output).grid(row=1, column=2)
+        tk.Button(decode_frame, text="Decode", command=self.decode).grid(row=1, column=1, pady=10)
 
-        tk.Button(decode_frame, text="Decode", command=self.decode).grid(row=2, column=1, pady=10)
+        tk.Label(decode_frame, text="Decoded Output:").grid(row=2, column=0, sticky="nw")
+        self.decoded_output_text = scrolledtext.ScrolledText(decode_frame, width=38, height=4, wrap=tk.WORD)
+        self.decoded_output_text.grid(row=2, column=1, padx=2, pady=2, sticky="w")
 
-        # Decoded Message Display
-        self.result_text = scrolledtext.ScrolledText(root, height=10, wrap=tk.WORD)
-        self.result_text.pack(pady=10, fill="both", expand=True)
 
-    def select_secret(self):
-        file = filedialog.askopenfilename(title="Select Secret Message File", filetypes=[("Text Files", "*.txt")])
-        if file:
-            self.secret_entry.delete(0, tk.END)
-            self.secret_entry.insert(0, file)
+    # Removed select_secret, not needed anymore
 
-    def select_encode_output(self):
-        file = filedialog.asksaveasfilename(title="Save Encoded File", defaultextension=".txt", filetypes=[("Text Files", "*.txt")])
-        if file:
-            self.encode_output_entry.delete(0, tk.END)
-            self.encode_output_entry.insert(0, file)
 
-    def select_encoded(self):
-        file = filedialog.askopenfilename(title="Select Encoded File", filetypes=[("Text Files", "*.txt")])
-        if file:
-            self.encoded_entry.delete(0, tk.END)
-            self.encoded_entry.insert(0, file)
+    # Removed select_encode_output, not needed anymore
 
-    def select_decode_output(self):
-        file = filedialog.asksaveasfilename(title="Save Decoded File", defaultextension=".txt", filetypes=[("Text Files", "*.txt")])
-        if file:
-            self.decode_output_entry.delete(0, tk.END)
-            self.decode_output_entry.insert(0, file)
+
+    # Removed select_encoded and select_decode_output, not needed anymore
 
     def encode(self):
-        secret = self.secret_entry.get()
-        output = self.encode_output_entry.get()
-        if not secret or not output:
-            messagebox.showerror("Error", "Please select secret file and output file for encoding.")
+        secret = self.secret_text.get("1.0", tk.END).rstrip("\n")
+        if not secret:
+            messagebox.showerror("Error", "Please enter a secret message to encode.")
             return
-        success, msg = encode_message(secret, output)
+        success, encoded = encode_message(secret, None)
         if success:
-            messagebox.showinfo("Success", msg)
+            self.encoded_output_text.delete("1.0", tk.END)
+            self.encoded_output_text.insert(tk.END, encoded)
+            messagebox.showinfo("Success", "Encoding successful! Encoded message is ready to copy.")
         else:
-            messagebox.showerror("Error", msg)
+            messagebox.showerror("Error", encoded)
 
     def decode(self):
-        encoded = self.encoded_entry.get()
-        output = self.decode_output_entry.get()
-        if not encoded or not output:
-            messagebox.showerror("Error", "Please select all files for decoding.")
+        encoded = self.encoded_input_text.get("1.0", tk.END).rstrip("\n")
+        if not encoded:
+            messagebox.showerror("Error", "Please enter the encoded message to decode.")
             return
-        success, msg = decode_message(encoded, output)
+        success, decoded = decode_message(encoded, None)
         if success:
-            messagebox.showinfo("Success", "Decoding successful!")
-            self.result_text.delete(1.0, tk.END)
-            self.result_text.insert(tk.END, msg)
+            self.decoded_output_text.delete("1.0", tk.END)
+            self.decoded_output_text.insert(tk.END, decoded)
+            messagebox.showinfo("Success", "Decoding successful! Decoded message is ready to copy.")
         else:
-            messagebox.showerror("Error", msg)
+            messagebox.showerror("Error", decoded)
 
 if __name__ == "__main__":
     root = tk.Tk()
