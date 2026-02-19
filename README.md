@@ -1,44 +1,30 @@
-# SpaceCrypt
+# SpaceCrypt 🛰️  
 
-SpaceCrypt is a simple GUI application for encoding and decoding secret messages using whitespace steganography. It hides messages in whitespace characters (spaces, tabs, and newlines) based on binary representation.
+**SpaceCrypt** is a sleek, modern, and user-friendly whitespace steganography encryption tool built in Python. It allows users to encode and decode secret messages using invisible whitespace characters (spaces, tabs, and newlines), providing a simple yet powerful way to hide information in plain text. The app features an intuitive, Apple-inspired GUI, making encryption and decryption easy for both beginners and advanced users.  
 
-## Features
+---
 
-- **Encode**: Convert a secret message into a text file containing only whitespace characters.
-- **Decode**: Extract the hidden message from an encoded whitespace file.
-- **GUI**: User-friendly interface with file selection dialogs.
+## Features ✨  
 
-## How It Works
+- **Encode & Decode Messages**: Easily convert your secret messages into invisible whitespace code and back.  
+- **Minimalist GUI**: Inspired by Apple design principles — clean, simple, and intuitive interface.  
+- **Clipboard Support**: Copy encoded messages directly to the clipboard with one click.  
+- **Smooth Navigation**: Choose between encoding or decoding from the welcome screen.  
+- **Placeholder Guidance**: Input boxes have clear instructions to guide the user.  
+- **Error Handling**: Alerts the user if input is missing or invalid.  
 
-The encoding process:
-1. Reads the secret message.
-2. Converts each character to its 8-bit binary representation.
-3. Maps '0' to space, '1' to tab, and word separators to newline.
-4. Saves the encoded whitespace to a file.
+---
 
-The decoding process reverses this:
-1. Reads the encoded file.
-2. Maps spaces to '0', tabs to '1', newlines to word separators.
-3. Converts binary back to characters.
+## Screenshots 🖼️  
 
-## Requirements
+*(Optional: Add screenshots of your welcome screen, encoding screen, and decoding screen here.)*
 
-- Python 3.x
-- Tkinter (usually included with Python)
+---
 
-## Running the Application
+## Installation ⚙️  
 
-- **From Source**: Run `python spacecrypt.py`
-- **Executable**: Run `dist/SpaceCrypt.exe` (built with PyInstaller)
-2. For encoding:
-   - Select the secret message file (text file).
-   - Choose output file for encoded data.
-   - Click "Encode".
-3. For decoding:
-   - Select the encoded file.
-   - Choose output file for decoded message.
-   - Click "Decode". The decoded message will also be displayed in the text area.
+1. Clone the repository:  
 
-## Note
-
-This is a basic implementation of whitespace steganography. The encoded files contain only whitespace, which may appear empty in some text editors.
+```bash
+git clone https://github.com/your-username/SpaceCrypt.git
+cd SpaceCrypt
