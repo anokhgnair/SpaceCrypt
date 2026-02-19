@@ -5,7 +5,7 @@
 ---
  
 ## Features ✨  
-
+ 
 - **Encode & Decode Messages**: Easily convert your secret messages into invisible whitespace code and back.  
 - **Minimalist GUI**: Inspired by Apple design principles — clean, simple, and intuitive interface.  
 - **Clipboard Support**: Copy encoded messages directly to the clipboard with one click.  
