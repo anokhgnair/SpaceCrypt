@@ -15,11 +15,6 @@
 
 ---
 
-## Screenshots 🖼️  
-
-*(Optional: Add screenshots of your welcome screen, encoding screen, and decoding screen here.)*
-
----
 
 ## Installation ⚙️  
 
@@ -27,4 +22,56 @@
 
 ```bash
 git clone https://github.com/your-username/SpaceCrypt.git
+```
+```bash
 cd SpaceCrypt
+```
+2. Install dependencies (if not already installed):
+```bash
+pip install tk
+```
+3. Run the application:
+```bash
+python main.py
+```
+## How to Use 📝  
+
+1. **Launch the App**: Open `main.py`.  
+2. **Choose an Action**: On the welcome screen, select `Encode` or `Decode`.  
+3. **Encode**: Type your secret message in the input box and click `Encode`. Copy the resulting encoded text using the clipboard button.  
+4. **Decode**: Paste the encoded whitespace message in the input box and click `Decode`. The decoded message will appear for you to read or copy.  
+
+---
+
+## Technology Stack 💻  
+
+- **Python 3.x**  
+- **Tkinter** for GUI  
+- **Whitespace Steganography** for encryption  
+
+---
+
+## Why SpaceCrypt? 🚀  
+
+SpaceCrypt combines **security, simplicity, and aesthetics**. Unlike complex encryption tools, it provides a lightweight, approachable solution for hiding secret messages in plain text. Its modern, minimal GUI ensures that even beginners can use it without confusion.  
+
+---
+
+## Contributing 🤝  
+
+Contributions are welcome! Feel free to:  
+
+- Submit bug reports  
+- Suggest improvements or new features  
+- Enhance the GUI or add more encoding options  
+
+Please fork the repository and create a pull request for your changes.
+
+---
+
+## Screenshots 🖼️  
+
+<img width="669" height="846" alt="Screenshot 2026-02-19 171027" src="https://github.com/user-attachments/assets/56d86aca-21f4-4be7-a05f-4af72380854f" />
+
+---
+
