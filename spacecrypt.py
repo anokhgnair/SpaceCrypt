@@ -91,8 +91,18 @@ class SpaceCryptApp:
         self.border_color = "#D1D1D6"
         self.neutral_bg = "#F5F5F7"
 
+        self.anokh_colors = ["#FF5733", "#33FF57", "#3357FF", "#FF33A1", "#A133FF", "#33FFA1"]
+        self.anokh_color_index = 0
+        self.anokh_label = None
         self.container = None
         self.show_welcome_screen()
+
+    def animate_anokh_color(self):
+        if self.anokh_label and self.anokh_label.winfo_exists():
+            color = self.anokh_colors[self.anokh_color_index]
+            self.anokh_label.config(fg=color)
+            self.anokh_color_index = (self.anokh_color_index + 1) % len(self.anokh_colors)
+            self.root.after(500, self.animate_anokh_color)
 
     def show_welcome_screen(self):
         if self.container:
@@ -125,8 +135,14 @@ class SpaceCryptApp:
         title = tk.Label(title_row, text="SpaceCrypt", font=self.heading_font, bg="#fff", fg="#222", anchor="center", justify="center")
         title.grid(row=0, column=1, sticky="e")
 
-        by_label = tk.Label(title_row, text="by Anokh", font=("Helvetica Neue", 10), bg="#fff", fg="#B0B0B0", anchor="w", justify="left")
-        by_label.grid(row=0, column=2, sticky="w", padx=(8, 0))
+        by_frame = tk.Frame(title_row, bg="#fff")
+        by_frame.grid(row=0, column=2, sticky="w", padx=(8,0))
+
+        by_prefix_label = tk.Label(by_frame, text="by ", font=("Helvetica Neue", 10), bg="#fff", fg="#B0B0B0")
+        by_prefix_label.pack(side="left")
+
+        self.anokh_label = tk.Label(by_frame, text="Anokh", font=("Helvetica Neue", 10, "bold"), bg="#fff", fg=self.primary_color)
+        self.anokh_label.pack(side="left")
 
         spacer_right = tk.Frame(title_row, bg="#fff")
         spacer_right.grid(row=0, column=3, sticky="ew")
@@ -159,6 +175,8 @@ class SpaceCryptApp:
             card.grid_rowconfigure(i, weight=1)
         for i in range(2):
             card.grid_columnconfigure(i, weight=1)
+
+        self.animate_anokh_color()
 
     def show_encode_screen(self):
         if self.container:
