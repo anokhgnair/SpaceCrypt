@@ -27,9 +27,15 @@
 
 ### Option 1: Download and Run the EXE (Windows)
 
-1. Download the latest `SpaceCrypt.exe` from the [Releases](https://github.com/anokhgnair/SpaceCrypt/releases) page on GitHub.
-2. Save the file to your computer.
-3. Double-click `SpaceCrypt.exe` to launch the app. No installation required.
+
+#### 1. Download the latest `SpaceCrypt.exe` from the [Releases](https://github.com/anokhgnair/SpaceCrypt/releases) page on GitHub.
+
+
+#### 2. Save the file to your computer.
+
+
+#### 3. Double-click `SpaceCrypt.exe` to launch the app. No installation required.
+
 
 ---
 
@@ -117,4 +123,5 @@ python spacecrypt.py
 <img width="669" height="846" alt="Screenshot 2026-02-19 171027" src="https://github.com/user-attachments/assets/56d86aca-21f4-4be7-a05f-4af72380854f" />
 
 ---
+
 
