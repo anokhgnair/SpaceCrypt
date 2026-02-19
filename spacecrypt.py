@@ -170,8 +170,16 @@ class SpaceCryptApp:
         card = tk.Frame(self.container, bg="#fff", bd=0, highlightthickness=1, highlightbackground=self.border_color)
         card.place(relx=0.5, rely=0.5, anchor="center", relwidth=0.92, relheight=0.88)
 
+        # Go back icon button (top left)
+        go_back_icon_btn = tk.Button(card, text="\u2B05", font=("Segoe UI Emoji", 18), bg="#fff", fg="#007AFF", bd=0, relief=tk.FLAT, cursor="hand2", command=self.show_welcome_screen, highlightthickness=0, activebackground="#E5E5EA", activeforeground="#005BBB", width=2, height=1)
+        go_back_icon_btn.grid(row=0, column=0, sticky="nw", padx=(10, 0), pady=(18, 0))
+        def on_enter_goback(e): go_back_icon_btn.config(bg="#E5E5EA")
+        def on_leave_goback(e): go_back_icon_btn.config(bg="#fff")
+        go_back_icon_btn.bind("<Enter>", on_enter_goback)
+        go_back_icon_btn.bind("<Leave>", on_leave_goback)
+
         title = tk.Label(card, text="Encode", font=self.heading_font, bg="#fff", fg="#222")
-        title.grid(row=0, column=0, columnspan=2, pady=(30, 8), padx=15, sticky="n")
+        title.grid(row=0, column=0, columnspan=2, pady=(30, 8), padx=40, sticky="n")
 
         # Secret message input
         input_frame = tk.Frame(card, bg="#fff")
@@ -234,13 +242,52 @@ class SpaceCryptApp:
         copy_icon_btn.bind("<Leave>", on_leave_copy)
         copy_icon_btn.bind("<FocusIn>", lambda e: copy_icon_btn.configure(highlightthickness=0))
 
-        # Back button
-        back_btn = tk.Button(card, text="\u2190 Back", font=self.text_font, bg=self.secondary_bg, fg="#666", activebackground="#D1D1D6", activeforeground="#222", bd=0, relief=tk.FLAT, cursor="hand2", command=self.show_welcome_screen, highlightthickness=0)
-        back_btn.grid(row=5, column=0, pady=(0, 0), sticky="w", ipadx=10, ipady=3, padx=(15, 0))
-        def on_enter_back(e): back_btn.config(bg="#D1D1D6")
-        def on_leave_back(e): back_btn.config(bg=self.secondary_bg)
-        back_btn.bind("<Enter>", on_enter_back)
-        back_btn.bind("<Leave>", on_leave_back)
+        # Download icon button below the encoded text area
+        download_frame = tk.Frame(card, bg="#fff")
+        download_frame.grid(row=5, column=0, columnspan=2, sticky="ew", padx=15, pady=(0, 10))
+        download_icon_btn = tk.Button(
+            download_frame,
+            text="\U0001F4E5  Download Encoded Text",
+            font=("Segoe UI Emoji", 15, "bold"),
+            command=self.save_encoded_text,
+            relief=tk.FLAT,
+            cursor="hand2",
+            bg=self.primary_color,
+            fg="#fff",
+            bd=0,
+            activebackground="#005BBB",
+            activeforeground="#fff",
+            highlightthickness=0,
+            width=28,
+            height=2
+        )
+        download_icon_btn.pack(side="top", fill="x", expand=True)
+        def on_enter_download(e): download_icon_btn.config(bg="#005BBB")
+        def on_leave_download(e): download_icon_btn.config(bg=self.primary_color)
+        download_icon_btn.bind("<Enter>", on_enter_download)
+        download_icon_btn.bind("<Leave>", on_leave_download)
+        download_icon_btn.bind("<FocusIn>", lambda e: download_icon_btn.configure(highlightthickness=0))
+        # Info label below the button
+        download_info = tk.Label(download_frame, text="Click to download the encoded (encrypted) text as a file.", font=("Helvetica Neue", 10), bg="#fff", fg="#666")
+        download_info.pack(side="top", pady=(4, 0))
+    def save_encoded_text(self):
+        encoded = self.encoded_output_text.get("1.0", tk.END).rstrip("\n")
+        if not encoded:
+            tk.messagebox.showerror("Error", "No encoded text to save.")
+            return
+        file_path = filedialog.asksaveasfilename(
+            defaultextension=".txt",
+            filetypes=[("Text Files", "*.txt"), ("All Files", "*.*")],
+            title="Save Encoded Message As"
+        )
+        if file_path:
+            try:
+                with open(file_path, "w", encoding="utf-8") as f:
+                    f.write(encoded)
+                tk.messagebox.showinfo("Saved", f"Encoded message saved to:\n{file_path}")
+            except Exception as e:
+                tk.messagebox.showerror("Error", f"Failed to save file:\n{e}")
+
 
     def show_decode_screen(self):
         if self.container:
@@ -252,21 +299,52 @@ class SpaceCryptApp:
         card = tk.Frame(self.container, bg="#fff", bd=0, highlightthickness=1, highlightbackground=self.border_color)
         card.place(relx=0.5, rely=0.5, anchor="center", relwidth=0.92, relheight=0.88)
 
-        title = tk.Label(card, text="Decode", font=self.heading_font, bg="#fff", fg="#222")
-        title.grid(row=0, column=0, columnspan=2, pady=(30, 8), padx=15, sticky="n")
+        # Go back icon button (top left, same as encode)
+        go_back_icon_btn = tk.Button(card, text="\u2B05", font=("Segoe UI Emoji", 18), bg="#fff", fg="#007AFF", bd=0, relief=tk.FLAT, cursor="hand2", command=self.show_welcome_screen, highlightthickness=0, activebackground="#E5E5EA", activeforeground="#005BBB", width=2, height=1)
+        go_back_icon_btn.grid(row=0, column=0, sticky="nw", padx=(10, 0), pady=(18, 0))
+        def on_enter_goback(e): go_back_icon_btn.config(bg="#E5E5EA")
+        def on_leave_goback(e): go_back_icon_btn.config(bg="#fff")
+        go_back_icon_btn.bind("<Enter>", on_enter_goback)
+        go_back_icon_btn.bind("<Leave>", on_leave_goback)
 
-        # Encoded input
+        title = tk.Label(card, text="Decode", font=self.heading_font, bg="#fff", fg="#222")
+        title.grid(row=0, column=0, columnspan=2, pady=(30, 8), padx=40, sticky="n")
+
+        # Encoded input with file upload (button above text area)
         input_frame = tk.Frame(card, bg="#fff")
         input_frame.grid(row=1, column=0, columnspan=2, sticky="ew", padx=15, pady=(0, 10))
         input_frame.grid_columnconfigure(0, weight=1)
+
+        # Button to load encoded file (now above the text area)
+        load_file_btn = tk.Button(
+            input_frame,
+            text="\U0001F4C2  Load Encoded File",
+            font=("Segoe UI Emoji", 14, "bold"),  # Increased font size
+            command=self.load_encoded_file,
+            relief=tk.FLAT,
+            cursor="hand2",
+            bg=self.secondary_bg,
+            fg="#222",
+            bd=0,
+            activebackground="#D1D1D6",
+            activeforeground="#222",
+            highlightthickness=0,
+            width=26,  # Increased width
+            height=1   # Increased height
+        )
+        load_file_btn.grid(row=0, column=0, sticky="w", padx=(0, 0), pady=(0, 8))
+        def on_enter_load(e): load_file_btn.config(bg="#D1D1D6")
+        def on_leave_load(e): load_file_btn.config(bg=self.secondary_bg)
+        load_file_btn.bind("<Enter>", on_enter_load)
+        load_file_btn.bind("<Leave>", on_leave_load)
 
         self.encoded_input_text = scrolledtext.ScrolledText(
             input_frame, width=38, height=4, font=self.text_font, wrap=tk.WORD,
             bg=self.neutral_bg, fg="#222", bd=0, relief=tk.FLAT,
             highlightthickness=1, highlightbackground=self.border_color, padx=8, pady=6
         )
-        self.encoded_input_text.grid(row=0, column=0, sticky="ew")
-        self.add_placeholder(self.encoded_input_text, "Paste the text you want to decode here.")
+        self.encoded_input_text.grid(row=1, column=0, sticky="ew")
+        self.add_placeholder(self.encoded_input_text, "Paste the text you want to decode here or load a file.")
 
         # Decode button
         decode_btn = tk.Button(card, text="Decode", command=self.decode)
@@ -288,13 +366,24 @@ class SpaceCryptApp:
         )
         self.decoded_output_text.grid(row=4, column=0, columnspan=2, padx=15, pady=(0, 0), sticky="ew")
 
-        # Back button
-        back_btn = tk.Button(card, text="\u2190 Back", font=self.text_font, bg=self.secondary_bg, fg="#666", activebackground="#D1D1D6", activeforeground="#222", bd=0, relief=tk.FLAT, cursor="hand2", command=self.show_welcome_screen, highlightthickness=0)
-        back_btn.grid(row=5, column=0, pady=(0, 0), sticky="w", ipadx=10, ipady=3, padx=(15, 0))
-        def on_enter_back(e): back_btn.config(bg="#D1D1D6")
-        def on_leave_back(e): back_btn.config(bg=self.secondary_bg)
-        back_btn.bind("<Enter>", on_enter_back)
-        back_btn.bind("<Leave>", on_leave_back)
+        # (No separate back button, handled by go back icon)
+
+    def load_encoded_file(self):
+        file_path = filedialog.askopenfilename(
+            filetypes=[("Text Files", "*.txt"), ("All Files", "*.*")],
+            title="Select Encoded File"
+        )
+        if file_path:
+            try:
+                with open(file_path, "r", encoding="utf-8") as f:
+                    content = f.read()
+                self.encoded_input_text.delete("1.0", tk.END)
+                self.encoded_input_text.insert(tk.END, content)
+                tk.messagebox.showinfo("Loaded", f"Encoded file loaded from:\n{file_path}")
+                # Automatically trigger decode after loading
+                self.decode()
+            except Exception as e:
+                tk.messagebox.showerror("Error", f"Failed to load file:\n{e}")
 
 
     # Removed select_secret, not needed anymore
