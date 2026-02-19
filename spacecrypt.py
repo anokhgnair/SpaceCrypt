@@ -44,6 +44,27 @@ def decode_message(encoded_file, output_file):
         return False, str(e)
 
 class SpaceCryptApp:
+    def add_placeholder(self, widget, text):
+        # Add placeholder text to a scrolledtext widget
+        def on_focus_in(event):
+            if widget.get("1.0", tk.END).strip() == text:
+                widget.delete("1.0", tk.END)
+                widget.config(fg="#222")
+        def on_focus_out(event):
+            if not widget.get("1.0", tk.END).strip():
+                widget.insert("1.0", text)
+                widget.config(fg="#b0b0b0")
+        widget.insert("1.0", text)
+        widget.config(fg="#b0b0b0")
+        widget.bind("<FocusIn>", on_focus_in)
+        widget.bind("<FocusOut>", on_focus_out)
+        # Remove placeholder if user pastes or types
+        def on_key(event):
+            if widget.get("1.0", tk.END).strip() == text:
+                widget.delete("1.0", tk.END)
+                widget.config(fg="#222")
+        widget.bind("<Key>", on_key)
+
     def copy_encoded_text(self):
         encoded = self.encoded_output_text.get("1.0", tk.END).rstrip("\n")
         if encoded:
@@ -103,6 +124,7 @@ class SpaceCryptApp:
 
         self.secret_text = scrolledtext.ScrolledText(self.container, width=38, height=4, font=self.text_font, wrap=tk.WORD, bg="#f5f6fa", fg="#222", bd=0, relief=tk.FLAT, highlightthickness=1, highlightbackground="#e0e0e0")
         self.secret_text.grid(row=1, column=0, columnspan=3, padx=2, pady=(0, 8), sticky="ew")
+        self.add_placeholder(self.secret_text, "Type the text you want to encode here.")
 
         encode_btn = tk.Button(self.container, text="Encode", font=self.label_font, bg="#e0e0e0", fg="#222", activebackground="#d1d1d6", activeforeground="#222", bd=0, relief=tk.FLAT, cursor="hand2", command=self.encode, height=1)
         encode_btn.grid(row=2, column=2, pady=(0, 10), sticky="e", ipadx=12, ipady=2)
@@ -139,6 +161,7 @@ class SpaceCryptApp:
 
         self.encoded_input_text = scrolledtext.ScrolledText(self.container, width=38, height=4, font=self.text_font, wrap=tk.WORD, bg="#f5f6fa", fg="#222", bd=0, relief=tk.FLAT, highlightthickness=1, highlightbackground="#e0e0e0")
         self.encoded_input_text.grid(row=1, column=0, columnspan=3, padx=2, pady=(0, 8), sticky="ew")
+        self.add_placeholder(self.encoded_input_text, "Paste the text you want to decode here.")
 
         decode_btn = tk.Button(self.container, text="Decode", font=self.label_font, bg="#e0e0e0", fg="#222", activebackground="#d1d1d6", activeforeground="#222", bd=0, relief=tk.FLAT, cursor="hand2", command=self.decode, height=1)
         decode_btn.grid(row=2, column=2, pady=(0, 10), sticky="e", ipadx=12, ipady=2)
