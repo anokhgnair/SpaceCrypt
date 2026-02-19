@@ -44,39 +44,121 @@ def decode_message(encoded_file, output_file):
         return False, str(e)
 
 class SpaceCryptApp:
+    def copy_encoded_text(self):
+        encoded = self.encoded_output_text.get("1.0", tk.END).rstrip("\n")
+        if encoded:
+            self.root.clipboard_clear()
+            self.root.clipboard_append(encoded)
+            self.root.update()  # Keeps clipboard after window closes
+            tk.messagebox.showinfo("Copied", "Encoded text copied to clipboard!")
+
     def __init__(self, root):
         self.root = root
-        self.root.title("SpaceCrypt - Whitespace Steganography")
-        self.root.geometry("600x500")
+        self.root.title("SpaceCrypt")
+        self.root.geometry("540x650")
+        self.root.configure(bg="#f7f7fa")
+        self.root.resizable(False, False)
 
-        # Encode Section
-        encode_frame = tk.LabelFrame(root, text="Encode Message", padx=10, pady=10)
-        encode_frame.pack(pady=10, fill="x")
+        # Set a modern, clean font
+        self.font_family = "Segoe UI"
+        self.font_size = 12
+        self.title_font = (self.font_family, 20, "bold")
+        self.label_font = (self.font_family, 12, "bold")
+        self.text_font = (self.font_family, 12)
 
+        self.container = None
+        self.show_welcome_screen()
 
-        tk.Label(encode_frame, text="Secret Message:").grid(row=0, column=0, sticky="nw")
-        self.secret_text = scrolledtext.ScrolledText(encode_frame, width=38, height=4, wrap=tk.WORD)
-        self.secret_text.grid(row=0, column=1, padx=2, pady=2, sticky="w")
+    def show_welcome_screen(self):
+        if self.container:
+            self.container.destroy()
+        self.container = tk.Frame(self.root, bg="#ffffff", bd=0, highlightthickness=0)
+        self.container.place(relx=0.5, rely=0.5, anchor="center", relwidth=0.96, relheight=0.96)
+        self.container.grid_propagate(False)
 
-        tk.Button(encode_frame, text="Encode", command=self.encode).grid(row=1, column=1, pady=10)
+        title = tk.Label(self.container, text="SpaceCrypt", font=self.title_font, bg="#ffffff", fg="#222222")
+        title.pack(pady=(60, 10))
 
-        tk.Label(encode_frame, text="Encoded Text:").grid(row=2, column=0, sticky="nw")
-        self.encoded_output_text = scrolledtext.ScrolledText(encode_frame, width=38, height=4, wrap=tk.WORD)
-        self.encoded_output_text.grid(row=2, column=1, padx=2, pady=2, sticky="w")
+        subtitle = tk.Label(self.container, text="Choose an action to begin", font=(self.font_family, 13), bg="#ffffff", fg="#666")
+        subtitle.pack(pady=(0, 40))
 
-        # Decode Section
-        decode_frame = tk.LabelFrame(root, text="Decode Message", padx=10, pady=10)
-        decode_frame.pack(pady=10, fill="x")
+        btn_frame = tk.Frame(self.container, bg="#ffffff")
+        btn_frame.pack(pady=(0, 0))
 
-        tk.Label(decode_frame, text="Encoded Input:").grid(row=0, column=0, sticky="nw")
-        self.encoded_input_text = scrolledtext.ScrolledText(decode_frame, width=38, height=4, wrap=tk.WORD)
-        self.encoded_input_text.grid(row=0, column=1, padx=2, pady=2, sticky="w")
+        encode_btn = tk.Button(btn_frame, text="Encode", font=self.label_font, bg="#e0e0e0", fg="#222", activebackground="#d1d1d6", activeforeground="#222", bd=0, relief=tk.FLAT, cursor="hand2", width=14, height=2, command=self.show_encode_screen)
+        encode_btn.grid(row=0, column=0, padx=18)
 
-        tk.Button(decode_frame, text="Decode", command=self.decode).grid(row=1, column=1, pady=10)
+        decode_btn = tk.Button(btn_frame, text="Decode", font=self.label_font, bg="#e0e0e0", fg="#222", activebackground="#d1d1d6", activeforeground="#222", bd=0, relief=tk.FLAT, cursor="hand2", width=14, height=2, command=self.show_decode_screen)
+        decode_btn.grid(row=0, column=1, padx=18)
 
-        tk.Label(decode_frame, text="Decoded Output:").grid(row=2, column=0, sticky="nw")
-        self.decoded_output_text = scrolledtext.ScrolledText(decode_frame, width=38, height=4, wrap=tk.WORD)
-        self.decoded_output_text.grid(row=2, column=1, padx=2, pady=2, sticky="w")
+    def show_encode_screen(self):
+        if self.container:
+            self.container.destroy()
+        self.container = tk.Frame(self.root, bg="#ffffff", bd=0, highlightthickness=0)
+        self.container.place(relx=0.5, rely=0.5, anchor="center", relwidth=0.96, relheight=0.96)
+        self.container.grid_propagate(False)
+
+        title = tk.Label(self.container, text="Encode", font=self.title_font, bg="#ffffff", fg="#222222")
+        title.grid(row=0, column=0, columnspan=3, pady=(18, 8), sticky="n")
+
+        self.secret_text = scrolledtext.ScrolledText(self.container, width=38, height=4, font=self.text_font, wrap=tk.WORD, bg="#f5f6fa", fg="#222", bd=0, relief=tk.FLAT, highlightthickness=1, highlightbackground="#e0e0e0")
+        self.secret_text.grid(row=1, column=0, columnspan=3, padx=2, pady=(0, 8), sticky="ew")
+
+        encode_btn = tk.Button(self.container, text="Encode", font=self.label_font, bg="#e0e0e0", fg="#222", activebackground="#d1d1d6", activeforeground="#222", bd=0, relief=tk.FLAT, cursor="hand2", command=self.encode, height=1)
+        encode_btn.grid(row=2, column=2, pady=(0, 10), sticky="e", ipadx=12, ipady=2)
+
+        encoded_label_frame = tk.Frame(self.container, bg="#ffffff")
+        encoded_label_frame.grid(row=3, column=0, sticky="w", pady=(0, 0))
+        tk.Label(encoded_label_frame, text="Encoded Text", font=self.label_font, bg="#ffffff", fg="#4a4a4a").pack(side=tk.LEFT)
+        copy_icon = tk.Button(encoded_label_frame, text="📋", font=("Segoe UI Emoji", 16), command=self.copy_encoded_text, relief=tk.FLAT, cursor="hand2", bg="#ffffff", bd=0, activebackground="#e0e0e0")
+        copy_icon.pack(side=tk.LEFT, padx=(8,0))
+
+        self.encoded_output_text = scrolledtext.ScrolledText(self.container, width=38, height=4, font=self.text_font, wrap=tk.WORD, bg="#f5f6fa", fg="#222", bd=0, relief=tk.FLAT, highlightthickness=1, highlightbackground="#e0e0e0")
+        self.encoded_output_text.grid(row=4, column=0, columnspan=3, padx=2, pady=(0, 18), sticky="ew")
+
+        back_btn = tk.Button(self.container, text="← Back", font=(self.font_family, 11), bg="#f7f7fa", fg="#666", activebackground="#e0e0e0", activeforeground="#222", bd=0, relief=tk.FLAT, cursor="hand2", command=self.show_welcome_screen)
+        back_btn.grid(row=5, column=0, pady=(0, 0), sticky="w", ipadx=8, ipady=1)
+
+        for btn in [encode_btn, copy_icon, back_btn]:
+            btn.bind("<FocusIn>", lambda e: e.widget.configure(highlightthickness=0))
+
+        for i in range(6):
+            self.container.grid_rowconfigure(i, pad=2)
+        for i in range(3):
+            self.container.grid_columnconfigure(i, weight=1)
+
+    def show_decode_screen(self):
+        if self.container:
+            self.container.destroy()
+        self.container = tk.Frame(self.root, bg="#ffffff", bd=0, highlightthickness=0)
+        self.container.place(relx=0.5, rely=0.5, anchor="center", relwidth=0.96, relheight=0.96)
+        self.container.grid_propagate(False)
+
+        title = tk.Label(self.container, text="Decode", font=self.title_font, bg="#ffffff", fg="#222222")
+        title.grid(row=0, column=0, columnspan=3, pady=(18, 8), sticky="n")
+
+        self.encoded_input_text = scrolledtext.ScrolledText(self.container, width=38, height=4, font=self.text_font, wrap=tk.WORD, bg="#f5f6fa", fg="#222", bd=0, relief=tk.FLAT, highlightthickness=1, highlightbackground="#e0e0e0")
+        self.encoded_input_text.grid(row=1, column=0, columnspan=3, padx=2, pady=(0, 8), sticky="ew")
+
+        decode_btn = tk.Button(self.container, text="Decode", font=self.label_font, bg="#e0e0e0", fg="#222", activebackground="#d1d1d6", activeforeground="#222", bd=0, relief=tk.FLAT, cursor="hand2", command=self.decode, height=1)
+        decode_btn.grid(row=2, column=2, pady=(0, 10), sticky="e", ipadx=12, ipady=2)
+
+        decoded_label = tk.Label(self.container, text="Decoded Output", font=self.label_font, bg="#ffffff", fg="#4a4a4a")
+        decoded_label.grid(row=3, column=0, columnspan=3, sticky="w")
+
+        self.decoded_output_text = scrolledtext.ScrolledText(self.container, width=38, height=4, font=self.text_font, wrap=tk.WORD, bg="#f5f6fa", fg="#222", bd=0, relief=tk.FLAT, highlightthickness=1, highlightbackground="#e0e0e0")
+        self.decoded_output_text.grid(row=4, column=0, columnspan=3, padx=2, pady=(0, 0), sticky="ew")
+
+        back_btn = tk.Button(self.container, text="← Back", font=(self.font_family, 11), bg="#f7f7fa", fg="#666", activebackground="#e0e0e0", activeforeground="#222", bd=0, relief=tk.FLAT, cursor="hand2", command=self.show_welcome_screen)
+        back_btn.grid(row=5, column=0, pady=(0, 0), sticky="w", ipadx=8, ipady=1)
+
+        for btn in [decode_btn, back_btn]:
+            btn.bind("<FocusIn>", lambda e: e.widget.configure(highlightthickness=0))
+
+        for i in range(6):
+            self.container.grid_rowconfigure(i, pad=2)
+        for i in range(3):
+            self.container.grid_columnconfigure(i, weight=1)
 
 
     # Removed select_secret, not needed anymore
