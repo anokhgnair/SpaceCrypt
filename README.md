@@ -3,7 +3,7 @@
 **SpaceCrypt** is a sleek, modern, and user-friendly whitespace steganography encryption tool built in Python. It allows users to encode and decode secret messages using invisible whitespace characters (spaces, tabs, and newlines), providing a simple yet powerful way to hide information in plain text. The app features an intuitive, Apple-inspired GUI, making encryption and decryption easy for both beginners and advanced users.  
 
 ---
-
+ 
 ## Features ✨  
 
 - **Encode & Decode Messages**: Easily convert your secret messages into invisible whitespace code and back.  
