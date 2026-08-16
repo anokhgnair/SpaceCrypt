@@ -102,7 +102,7 @@ Fork the repository and create a pull request with your changes.
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/your-username/SpaceCrypt.git
+git clone https://github.com/anokhgnair/SpaceCrypt.git
 cd SpaceCrypt
 ```
 
